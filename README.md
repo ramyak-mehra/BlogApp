@@ -1,6 +1,6 @@
-# blogapp
+# Blog App
 
-A new Flutter project.
+A concept blog app with bloc architecture. Backed is written in django.
 
 ## Getting Started
 
