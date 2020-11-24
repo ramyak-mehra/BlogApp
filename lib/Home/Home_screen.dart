@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:blogapp/Home/index.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -62,14 +63,36 @@ class HomeScreenState extends State<HomeScreen> {
             ));
           }
           if (currentState is InHomeState) {
-            return Center(
-                child: ListView.builder(
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListView(
+                children: [
+                  SizedBox(height: 20),
+                  'your saved articles'.richText.bold.xl.make().pOnly(left: 8),
+                  SizedBox(height: 20),
+                  VxSwiper.builder(
+                      aspectRatio: 1.5,
+                      initialPage: 0,
+                      itemCount: currentState.results.count,
+                      itemBuilder: (context, index) {
+                        return _buildSavedArticles(
+                            currentState.results.results[index]);
+                      }),
+                  SizedBox(height: 20),
+                  'your recommendations'.richText.bold.xl.make().pOnly(left: 8),
+                  SizedBox(height: 20),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: ScrollPhysics(),
                     itemCount: currentState.results.count,
                     itemBuilder: (context, index) {
-                      Results res = currentState.props[1];
-
-                      return _buildListTile(res.results[index]);
-                    }));
+                      return _buildListTile(
+                          currentState.results.results[index]);
+                    },
+                  ),
+                ],
+              ),
+            );
           }
           return Center(
             child: CircularProgressIndicator(),
@@ -91,8 +114,19 @@ class HomeScreenState extends State<HomeScreen> {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
-        leading: CircleAvatar(
-          child: Text(article.favoritesCount.toString()),
+        onTap: () {
+          widget._homeBloc
+              .add(NavigateArticleEvent(article: article, context: context));
+        },
+        leading: Container(
+          width: 50,
+          height: 50,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+              image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(
+                      'https://i.pinimg.com/originals/6f/d6/8c/6fd68ced202b643053e9f281de52a016.jpg'))),
         ),
         trailing: IconButton(
             icon: article.favorited
@@ -103,6 +137,55 @@ class HomeScreenState extends State<HomeScreen> {
                   .add(FavoriteArticleEvent(articleSlug: article.slug));
             }),
       ),
+    );
+  }
+
+  Widget _buildSavedArticles(Article article) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                      image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(
+                              'https://i.pinimg.com/originals/6f/d6/8c/6fd68ced202b643053e9f281de52a016.jpg'))),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  article.title,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
+              ),
+              SizedBox(height: 5),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      maxRadius: 15,
+                      backgroundImage: NetworkImage(article.author.image),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(article.author.username),
+                    )
+                  ],
+                ),
+              )
+            ],
+          )),
     );
   }
 }

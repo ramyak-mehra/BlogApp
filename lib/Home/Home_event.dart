@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:developer' as developer;
 
+import 'package:blogapp/Article/index.dart';
 import 'package:blogapp/Home/index.dart';
+import 'package:flutter/material.dart';
+import 'package:markdown/markdown.dart';
 import 'package:meta/meta.dart';
 
 @immutable
@@ -42,5 +45,16 @@ class FavoriteArticleEvent extends HomeEvent {
       yield InHomeState(currentState.version + 1, currentState.props[1]);
     else
       yield InHomeState(currentState.version, currentState.props[1]);
+  }
+}
+
+class NavigateArticleEvent extends HomeEvent {
+  final Article article;
+  final BuildContext context;
+
+  NavigateArticleEvent({@required this.article, @required this.context});
+  @override
+  Stream<HomeState> applyAsync({HomeState currentState, HomeBloc bloc}) async* {
+    Navigator.pushNamed(context, ArticlePage.routeName, arguments: article);
   }
 }

@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:meta/meta.dart';
 
 class HomeProvider {
-  static const String baseUrl = 'http://localhost:8000/api/';
+  static const String baseUrl = 'http://192.168.1.10:8000/api';
   static const String baseArticleUrl = '$baseUrl/articles';
   static const Map<String, String> baseHeaders = {
     'Authorization': 'Basic c2Ftbnl1OnRlc3RpbmcxMjM0'
@@ -77,5 +77,11 @@ class HomeProvider {
       return true;
     }
     return false;
+  }
+
+  Future getAllComments({@required String articleSLug}) async {
+    http.Response res =
+        await http.get(baseArticleUrl + '/$articleSLug/comments');
+    if (res.statusCode == 200) {}
   }
 }

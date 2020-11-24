@@ -1,3 +1,4 @@
+import 'package:blogapp/Article/Article_page.dart';
 import 'package:blogapp/Home/index.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,18 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Blog App',
-      routes: {'/': (context) => HomePage()},
+      darkTheme: ThemeData.dark(),
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case '/':
+            return MaterialPageRoute(builder: (_) => HomePage());
+
+          case ArticlePage.routeName:
+            return MaterialPageRoute(
+                builder: (_) => ArticlePage(article: settings.arguments));
+        }
+        return MaterialPageRoute(builder: (_) => HomePage());
+      },
     );
   }
 }

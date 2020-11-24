@@ -15,6 +15,6 @@ class HomeRepository {
   }
 
   Future<bool> followArticle(String articleSlug) async {
-    return _homeProvider.followArticle(articleSlug);
+    return _homeProvider.followArticle(articleSlug: articleSlug);
   }
 }

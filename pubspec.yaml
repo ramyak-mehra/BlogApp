@@ -27,6 +27,9 @@ dependencies:
   equatable: ^1.2.5
   flutter_bloc: ^6.1.1
   http: ^0.12.2
+  markdown: ^3.0.0
+  velocity_x: ^1.0.1
+  webview_flutter: ^1.0.7
 
 dev_dependencies:
   flutter_test:
